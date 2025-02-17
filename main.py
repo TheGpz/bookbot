@@ -1,13 +1,14 @@
 #Ouvre le doc
-with open("books/frankenstein.txt") as f:
+filepath = "books/frankenstein.txt"
+with open(filepath) as f:
     file_contents = f.read()
 
 #Compte les mots
 def count_words(file_contents):
     words = file_contents.split()
     word_count = len(words)
+    print(f"{word_count} words found in the document")
     return word_count
-    print(f"\nCe texte contient {word_count} mots.")
 
 #Compte les caractères (dont symboles et espaces)
 def count_characters(file_contents):
@@ -18,14 +19,35 @@ def count_characters(file_contents):
             character_count[character] += 1
         else:
             character_count[character] = 1
-    print(character_count)
     return character_count
 
-def sort_on(character_count):
-    return character_count["Num"]
+#Classe la liste par occurences
+def sort_on(dict):
+    return dict["num"]
+
+#Classification des caractères alphabétiques
+def classify_characters(character_count):
+    character_list = []
+    for character, count in character_count.items():
+        character_dict = {"char": character, "num": count}
+        if character.isalpha() == True:
+            character_list.append(character_dict)
+    character_list.sort(reverse=True, key=sort_on)
+    return character_list
+
+def generate_report(file_contents):
+    print(f"--- Begin report of {filepath} ---")
+    word_count = count_words(file_contents)
+    character_count = count_characters(file_contents)
+    sorted_chars = classify_characters(character_count)
+
+    for char_dict in sorted_chars:
+        char = char_dict["char"]
+        count = char_dict["num"]
+        print(f"The '{char}' character was found {count} times")
+
+    print("--- End report ---")
 
 
-count_characters(file_contents)
-
-    
-
+#MAIN EXECUTION
+generate_report(file_contents)
